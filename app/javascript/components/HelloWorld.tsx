@@ -56,6 +56,35 @@ company = "Amazon";
 let memory: 256 | 512;
 memory = 512;
 
+// Typeof 宣言済み変数を取得
+// JSON の object を取得する際に、 typeof が全部やってくれて便利
+let msg: string = "Hi";
+let msg2: typeof msg;
+msg = "string"
+
+let animal = {cat: "small cat" };
+let newAnimal: typeof animal = { cat: "big cat" }; 
+
+
+// keyof
+type KEYS = {
+  primary: string;
+  secondary: string;
+};
+let key: keyof KEYS;
+key = "primary" // key 名のみ入れることができる
+
+// typeof + keyof
+
+const SPORTS = {
+  soccer: "Soccer",
+  baseball: "Baseball",
+};
+
+let keySports: keyof typeof SPORTS;
+
+keySports = "baseball"
+
 type Props = {
   greeting: string
 }
