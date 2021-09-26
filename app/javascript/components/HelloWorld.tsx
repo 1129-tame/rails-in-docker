@@ -1,4 +1,7 @@
-import React from "react"
+import React from "react";
+import Data from "./date.json";
+
+type USERS = typeof Data;
 
 const name = "hello"; // 文字列リテラル
 
@@ -84,6 +87,86 @@ const SPORTS = {
 let keySports: keyof typeof SPORTS;
 
 keySports = "baseball"
+
+// enum 列挙型
+// 自動で連番してくれる
+enum OS {
+  Windows,
+  Mac,
+  Linux,
+}
+interface PC {
+  id: number,
+  OSType: OS;
+}
+const PC1: PC = {
+  id: 1,
+  OSType: OS.Windows,
+}
+const PC2: PC = {
+  id: 2,
+  OSType: OS.Mac,
+}
+
+// 型の互換性
+
+const comp1 = "test"; // 文字列
+let com2: string = comp1; // 代入できる string に 文字列は OK
+
+let com3: string = "test";
+// let comp4: "test" = com3; これはだめ
+
+let funcComp1 = (x: number) => {}
+let funcComp2 = (x: string) => {}
+
+// funcComp1 = funcComp2 // これもだめ
+
+// Generics ジェネリックス
+interface GEN<T> { // この時点では型は定まっていない
+  item: T;
+}
+
+const gen0: GEN<string> = {item: "Hello"}; // ここで型を指定
+// const gen1: GEN = {item: "Hello"}; // error
+const gen2: GEN<number> = {item: 12}; 
+
+interface GEN1<T = string> { // この時点では型は定まっていない
+  item: T;
+}
+const gen1: GEN1 = {item: "Hello"};
+
+interface GEN2<T extends string | number> {
+  item: T;
+}
+const gen4: GEN2<string> = {item: "hello"};
+const gen5: GEN2<number> = {item: 12}; // どっちもオーケー
+
+function funcGen<T>(props: T) {
+  return {item: props};
+}
+const gen6 = funcGen("test"); // 明示的にせずとも string 型が識別される
+const gen7 = funcGen<string | null>(null); // string か null か
+
+// extends
+function funcGen1<T extends string | null>(props: T) {
+  return {value: props};
+}
+const gen8 = funcGen1("hello");
+
+interface Props2 {
+  price: number;
+}
+function funcGen3<T extends Props2>(props: T) { // props2 に従う
+  return {value: props.price};
+}
+
+const gen10 = funcGen3({price: 108});
+
+// アロー関数 ver
+const funcGen4 = <T extends Props2>(props: T) => {
+  return { value: props.price };
+}
+
 
 type Props = {
   greeting: string
