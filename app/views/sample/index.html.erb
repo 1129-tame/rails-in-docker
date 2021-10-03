@@ -3,5 +3,23 @@
 <%= react_component("HelloWorld", { greeting: "Hello from react-rails." }) %> 
 <%# <p>aaaaaa</p>  %>
 <%# <%= react_component("App") %> 
-
-<%= react_component("Main") %>
+<!doctype html>
+<html lang="ja">
+<head>
+  <title>Markdown Editor</title>
+</head>
+<body>
+  <%= react_component("Main") %>
+  <script type="text/javascript">
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('../../javascript/components/sw.js').then((registration) => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope)
+          }, (err) => {
+            console.log('ServiceWorker registration failed: ', err)
+          })
+        })
+      }
+</script>
+</body>
+</html>

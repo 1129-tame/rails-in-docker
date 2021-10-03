@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useStateWithStorage } from '../hooks/use_state_with_storage'
-import ReactMarkdown from 'react-markdown'
 import { putMemo } from '../indexeddb/memos'
 import { Button } from '../components/button'
 import { SaveModal } from '../components/save_modal'
 import { Link } from 'react-router-dom'
 import { Header } from '../components/header'
+import ConvertMarkdownWorker from 'worker-loader!../worker/convert_markdown_worker'
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -48,9 +48,12 @@ const Preview = styled.div`
 `
 
 // useState 関数を React から取り出す
-const { useState } = React
+// const { useState } = React
 // localStorage でデータの参照・保存に使うキー名を決める
 // const StorageKey = 'pages/editor:text'
+
+const convertMarkdownWorker = new ConvertMarkdownWorker()
+const { useState, useEffect } = React
 
 interface Props {
   text: string
@@ -60,8 +63,18 @@ interface Props {
 // : const [値, 値をセットする関数] = useState<扱う状態の型>(初期値)
 export const Editor: React.FC<Props> = (props) => {
   const { text, setText } = props
-
   const [showModal, setShowModal] = useState(false)
+  const [html, setHtml] = useState('')
+
+  useEffect(() => {
+    convertMarkdownWorker.onmessage = (event) => {
+      setHtml(event.data.html)
+    }
+  }, [])
+
+  useEffect(() => {
+    convertMarkdownWorker.postMessage(text)
+  }, [text])
 
   return (
     <>
@@ -89,7 +102,7 @@ export const Editor: React.FC<Props> = (props) => {
             value={text}
           />
         <Preview>
-          <ReactMarkdown>{text}</ReactMarkdown>
+          <div dangerouslySetInnerHTML={{ __html: html }} />
         </Preview>
       </Wrapper>
       {showModal && (

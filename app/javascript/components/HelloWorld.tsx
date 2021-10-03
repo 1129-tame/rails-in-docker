@@ -1,7 +1,7 @@
 import React from "react";
-import Data from "./date.json";
+// import Data from "./date.json";
 
-type USERS = typeof Data;
+// type USERS = typeof Data;
 
 const name = "hello"; // 文字列リテラル
 
